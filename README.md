@@ -29,8 +29,7 @@ see &lt;http://www.gnu.org/licenses/&gt;.
 ## Usage
 
 The remaster script is the only one you should run directly. If required, it 
-downloads a mini.iso from archive.ubuntu.com
-(see https://help.ubuntu.com/community/Installation/MinimalCD)
+downloads a mini.iso from (ubuntu.com)[ubuntu-minimalcd]
 loop-mounts it and unpacks it. It will require sudo access to do this.
 
 Edit files/settings/*, then:
@@ -41,3 +40,6 @@ Where &lt;preseed&gt; is one of the items in files/preseeds/
 </pre>
 
 I apologise for the lack of documentation.
+
+[ubuntu-minimalcd]: https://help.ubuntu.com/community/Installation/MinimalCD
+[source]: http://github.com/danielrichman/preseed
