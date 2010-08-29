@@ -24,18 +24,18 @@ IFS=$IFS_O
 if [ "x$1" == "x" ]; then
 	echo "Usage $0 <preseed>"
 	echo "Where <preseed> is one of the items in files/preseeds/"
-	exit
+	exit 1
 fi
 
 if [ ! -d files ]; then
 	echo "Unable to find ./files"
-	exit
+	exit 1
 fi
 
 if [ ! -d files/preseeds/$1 ]; then
 	echo "Usage $0 <preseed>"
 	echo "Where <preseed> is one of the items in files/preseeds/"
-	exit
+	exit 1
 fi
 
 if [ ! -d files/orig ]; then
@@ -54,7 +54,7 @@ if [ -f files/preseeds/$1/build ]; then
 	if [ "x$ARCH" != "x$OARCH" ]; then
 		echo "Need to build an executable for this preseed, however, the downloaded arch is"
 		echo "$OARCH and this script doesn't know how to cross compile"
-		exit
+		exit 1
 	fi
 fi
 
