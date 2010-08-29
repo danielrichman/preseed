@@ -23,7 +23,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 For a full copy of the GNU General Public License, 
-see <http://www.gnu.org/licenses/>.
+see &lt;http://www.gnu.org/licenses/&gt;.
 </pre>
 
 ## Usage
@@ -36,8 +36,8 @@ loop-mounts it and unpacks it. It will require sudo access to do this.
 Edit files/settings/*, then:
 
 <pre>
-Usage ./remaster <preseed>
-Where <preseed> is one of the items in files/preseeds/
+Usage ./remaster &lt;preseed&gt;
+Where &lt;preseed&gt; is one of the items in files/preseeds/
 </pre>
 
 I apologise for the lack of documentation.
