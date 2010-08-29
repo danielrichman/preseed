@@ -1,8 +1,17 @@
 # Ubuntu Minimal CD Preseeding
 
 The scripts in this repo automate the process of embedding preseed files into
-a mini.iso initrd.gz, along with the ability to add things like your ssh 
-public key so that login is automatic as well.
+a initrd.gz of a ubuntu [mini.iso][ubuntu-minimalcd], along with the ability
+to add things like your ssh public key so that login is automatic as well.
+
+The `remaster` script does the majority of the work, with directories in 
+files/preseeds supplying a set of configuration files and helper scripts.
+For example, `netinstall` is configured to automatically download the 
+`network-console` component, it will embed your ssh public key so that you 
+can log in, and it will generate the ssh host keys on your computer rather
+than at run time so that you know what the fingerprints should be.
+`netinstall-watchdog` is the same, except it adds a small C program that
+will reboot the computer after a timeout is up.
 
 They are very temperamental and experimental. Play with the results in 
 virtual machines first, and note the "WITHOUT ANY WARRANTY" bit.
@@ -40,6 +49,15 @@ Where &lt;preseed&gt; is one of the items in files/preseeds/
 </pre>
 
 I apologise for the lack of documentation.
+
+## Dependencies
+
+ - wget
+ - bash
+ - cpio
+ - mkisofs
+ - fakeroot
+ - ssh-keygen
 
 [ubuntu-minimalcd]: https://help.ubuntu.com/community/Installation/MinimalCD
 [source]: http://github.com/danielrichman/preseed
