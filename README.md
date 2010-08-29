@@ -29,7 +29,7 @@ see &lt;http://www.gnu.org/licenses/&gt;.
 ## Usage
 
 The remaster script is the only one you should run directly. If required, it 
-downloads a mini.iso from (ubuntu.com)[ubuntu-minimalcd]
+downloads a mini.iso from [ubuntu.com][ubuntu-minimalcd]
 loop-mounts it and unpacks it. It will require sudo access to do this.
 
 Edit files/settings/*, then:
