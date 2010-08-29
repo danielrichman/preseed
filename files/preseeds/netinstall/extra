@@ -1,0 +1,49 @@
+#!/bin/bash
+set -e
+
+if [ "x$ADD" = "x" ]; then
+	exit 1
+fi
+
+KEYDIR=$ADD/etc/ssh
+AKEYDIR=$ADD/.ssh
+AKEYFILE=$AKEYDIR/authorized_keys
+KEYS="rsa dsa rsa1"
+AKEYS=`echo ~/.ssh/id_{d,r}sa.pub files/settings/id_{d,r}sa.pub`
+FPFILE=$OUT/fingerprints
+
+echo "Creating directories in $ADD"
+mkdir -pv $KEYDIR $AKEYDIR
+
+echo "Adding entries to $AKEYFILE:"
+echo "Authorized Keys:" > $FPFILE
+for i in $AKEYS; do
+	if [ -f $i ]; then
+		ssh-keygen -l -f $i | tee -a $FPFILE
+		cat $i >> $AKEYFILE
+	fi
+done
+echo >> $FPFILE
+
+if [ ! -f $AKEYFILE ]; then
+	echo "Error: couldn't find any keys to add to $AKEYFILE."
+	echo "Checked for $AKEYS"
+	exit 1
+fi
+
+echo "Generating server ssh keys:"
+echo "Server Keys:" >> $FPFILE
+for i in $KEYS; do
+	if [ $i == "rsa1" ]; then
+		N=''
+	else
+		N=${i}_
+	fi
+
+	F=$KEYDIR/ssh_host_${N}key
+
+	ssh-keygen -t $i -N '' -f $F -q
+	ssh-keygen -l -f $F | awk "{ print \$1\" \"\$2\" $F \"\$4 }" | tee -a $FPFILE
+done
+
+echo "Fingerprints have been stored in $FPFILE"

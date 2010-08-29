@@ -1,0 +1,62 @@
+#!/bin/bash
+set -e
+
+#    Copyright (C) 2010  Daniel Richman
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    For a full copy of the GNU General Public License,
+#    see <http://www.gnu.org/licenses/>.
+
+echo Temporary Directory files/download
+mkdir -v files/download
+
+# Configure me
+ARCH=`arch`
+
+if [ "$ARCH" == "x86_64" ]; then
+	ARCH=amd64
+	SUM=b4aaf4c8e7c4a11b765a6b37d9e873ecf4f45fc8
+else
+	ARCH=i386
+	SUM=40ea24c2c7a5a821d37fc93d5539f2160f7e1ef6
+fi
+
+echo Downloading mini.iso for $ARCH
+wget -O files/download/mini.iso -q http://archive.ubuntu.com/ubuntu/dists/lucid/main/installer-$ARCH/current/images/netboot/mini.iso
+
+if [ "`sha1sum files/download/mini.iso | cut -f1 -d' '`" == "$SUM" ]; then
+	echo Verified sha1sum $SUM
+else
+	echo Incorrect sha1sum
+	exit 1
+fi
+
+echo Loop-mounting files/download/mini.iso on files/download/temp
+echo sudo mount -o loop files/download/mini.iso files/download/temp
+mkdir -v files/download/temp
+sudo mount -o loop files/download/mini.iso files/download/temp
+
+mkdir -p files/orig
+
+echo Writing files/orig/arch
+echo $ARCH > files/orig/arch
+
+echo Copying isolinux.bin, initrd.gz and linux to ./files/orig
+cp -v files/download/temp/{isolinux.bin,initrd.gz,linux} files/orig/
+chmod u+w files/orig/{isolinux.bin,initrd.gz,linux}
+
+echo Unmounting files/download/mini.iso
+echo sudo umount files/download/temp
+sudo umount files/download/temp
+
+echo Removing files/download
+rm -Rf files/download

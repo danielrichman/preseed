@@ -1,0 +1,121 @@
+#!/bin/bash
+set -e
+
+#    Copyright (C) 2010  Daniel Richman
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    For a full copy of the GNU General Public License, 
+#    see <http://www.gnu.org/licenses/>.
+
+IFS_O=$IFS
+IFS=$(echo -en '\0')
+cd `dirname $0`
+IFS=$IFS_O
+
+if [ "x$1" == "x" ]; then
+	echo "Usage $0 <preseed>"
+	echo "Where <preseed> is one of the items in files/preseeds/"
+	exit
+fi
+
+if [ ! -d files ]; then
+	echo "Unable to find ./files"
+	exit
+fi
+
+if [ ! -d files/preseeds/$1 ]; then
+	echo "Usage $0 <preseed>"
+	echo "Where <preseed> is one of the items in files/preseeds/"
+	exit
+fi
+
+if [ ! -d files/orig ]; then
+	echo "Running ./files/misc/download"
+	./files/misc/download
+fi
+
+if [ -f files/preseeds/$1/build ]; then
+	OARCH=`cat files/orig/arch`
+	ARCH=`arch`
+
+	if [ "$ARCH" == "x86_64" ]; then
+		ARCH=amd64
+	fi
+
+	if [ "x$ARCH" != "x$OARCH" ]; then
+		echo "Need to build an executable for this preseed, however, the downloaded arch is"
+		echo "$OARCH and this script doesn't know how to cross compile"
+		exit
+	fi
+fi
+
+echo "Creating temporary (files/add) and output (files/output/$1) dirs"
+mkdir -v files/add
+mkdir -pv files/output/$1
+
+if [ -f files/preseeds/$1/build ]; then
+	echo "Running files/preseeds/$1/build"
+
+	export SRC=files/preseeds/$1
+	export ADD=files/add
+
+	./files/preseeds/$1/build
+fi
+
+if [ -f files/preseeds/$1/extra ]; then
+	echo "Adding extra files (running files/preseeds/$1/extra)"
+
+	export ADD=files/add
+	export OUT=files/output/$1
+
+	./files/preseeds/$1/extra
+fi
+
+echo Copying isolinux.bin, initrd.gz and linux from ./files/orig to output dir
+cp -v files/orig/{isolinux.bin,initrd.gz,linux} files/output/$1
+
+PRESEED=files/preseeds/$1/preseed.cfg
+if [ -d $PRESEED ]; then
+	PRESEED=$PRESEED/*
+fi
+
+echo Concatenating 
+for i in $PRESEED files/settings/*.cfg; do
+	echo "  " $i
+	cat $i >> files/add/preseed.cfg
+done
+echo and storing the result in files/add/preseed.cfg
+
+echo Gunzipping initrd.gz
+gunzip files/output/$1/initrd.gz
+
+echo Adding files in files/add to initrd
+(cd files/add
+ find . | fakeroot cpio --quiet -F ../output/$1/initrd --append -o -H newc)
+
+echo Gzipping initrd
+gzip files/output/$1/initrd
+
+echo Adding isolinux.cfg
+cp files/misc/isolinux.cfg files/output/$1
+
+echo Creating preseed.iso
+(cd files/output/$1
+ rm preseed.iso
+ mkisofs -quiet -r -V "preseed" -cache-inodes -J -l -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../preseed.iso .)
+mv files/output/preseed.iso files/output/$1
+
+echo Removing files/add
+rm -Rf files/add
+
+echo Listing files/output/$1
+ls --color=auto -lh files/output/$1

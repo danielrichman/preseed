@@ -1,0 +1,5 @@
+#!/bin/bash
+set -e
+
+echo "Compiling $SRC/watch.c -> $ADD/watch"
+exec gcc -O2 $SRC/watch.c -o $ADD/watch
