@@ -43,21 +43,6 @@ if [ ! -d files/orig ]; then
 	./files/misc/download
 fi
 
-if [ -f files/preseeds/$1/build ]; then
-	OARCH=`cat files/orig/arch`
-	ARCH=`arch`
-
-	if [ "$ARCH" == "x86_64" ]; then
-		ARCH=amd64
-	fi
-
-	if [ "x$ARCH" != "x$OARCH" ]; then
-		echo "Need to build an executable for this preseed, however, the downloaded arch is"
-		echo "$OARCH and this script doesn't know how to cross compile"
-		exit 1
-	fi
-fi
-
 echo "Creating temporary (files/add) and output (files/output/$1) dirs"
 mkdir -v files/add
 mkdir -pv files/output/$1

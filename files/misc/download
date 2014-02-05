@@ -19,20 +19,10 @@ set -e
 echo Temporary Directory files/download
 mkdir -v files/download
 
-# Configure me
-ARCH=`arch`
+echo Downloading mini.iso for amd64
+wget -O files/download/mini.iso -q http://ftp.debian.org/debian/dists/stable/main/installer-amd64/current/images/netboot/mini.iso
 
-if [ "$ARCH" == "x86_64" ]; then
-	ARCH=amd64
-	SUM=b4aaf4c8e7c4a11b765a6b37d9e873ecf4f45fc8
-else
-	ARCH=i386
-	SUM=40ea24c2c7a5a821d37fc93d5539f2160f7e1ef6
-fi
-
-echo Downloading mini.iso for $ARCH
-wget -O files/download/mini.iso -q http://archive.ubuntu.com/ubuntu/dists/lucid/main/installer-$ARCH/current/images/netboot/mini.iso
-
+SUM=a55859a54c422e1cb2ee91fbb0a65aa7fc699b60
 if [ "`sha1sum files/download/mini.iso | cut -f1 -d' '`" == "$SUM" ]; then
 	echo Verified sha1sum $SUM
 else
@@ -46,9 +36,6 @@ mkdir -v files/download/temp
 sudo mount -o loop files/download/mini.iso files/download/temp
 
 mkdir -p files/orig
-
-echo Writing files/orig/arch
-echo $ARCH > files/orig/arch
 
 echo Copying isolinux.bin, initrd.gz and linux to ./files/orig
 cp -v files/download/temp/{isolinux.bin,initrd.gz,linux} files/orig/
