@@ -96,7 +96,7 @@ cp files/misc/isolinux.cfg files/output/$1
 echo Creating preseed.iso
 (cd files/output/$1
  rm -f preseed.iso
- mkisofs -quiet -r -V "preseed" -cache-inodes -J -l -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../preseed.iso .)
+ genisoimage -quiet -r -V "preseed" -cache-inodes -J -l -b isolinux.bin -c boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table -o ../preseed.iso .)
 mv files/output/preseed.iso files/output/$1
 
 echo Removing files/add
