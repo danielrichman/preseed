@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+if [ "x$ADD" = "x" ]; then
+    exit 1
+fi
+
+files/preseeds/netinstall/extra
+
+if [ ! -f files/preseeds/netinstall-bnx2/bnx2.deb ]; then
+    echo Downloading bnx2...deb for amd64
+    wget -O files/preseeds/netinstall-bnx2/bnx2.deb -q http://debian.mirror.uk.sargasso.net/debian/pool/non-free/f/firmware-nonfree/firmware-bnx2_0.40_all.deb
+
+    SUM=7a65249da33ffe949ee01e39bee413df853041e0
+    if [ "`sha1sum files/preseeds/netinstall-bnx2/bnx2.deb | cut -f1 -d' '`" == "$SUM" ]; then
+        echo Verified sha1sum $SUM
+    else
+        echo Incorrect sha1sum
+        exit 1
+    fi
+fi
+
+dpkg-deb --extract files/preseeds/netinstall-bnx2/bnx2.deb $ADD
