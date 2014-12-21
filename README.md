@@ -60,7 +60,7 @@ dpkg-deb --extract firmware-bnx2_*.deb extra/
 ```bash
 gunzip installer/initrd.gz
 (cd extra; find . | fakeroot cpio --quiet -F ../installer/initrd --append -o -H newc)
-gzip -9 installer/initrd
+gzip installer/initrd
 ```
 
 ## 5) Make a CD
