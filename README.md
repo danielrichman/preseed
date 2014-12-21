@@ -36,11 +36,12 @@ cp /path/to/my/preseed.cfg extra/preseed.cfg
 Or, if you wanted to use the network-console (continue installation over SSH; see `netinstall-preseed.cfg`),
 
 ```bash
-mkdir -p extra/etc/ssh
 # add our public key to the installer, so we can log in
-cp ~/.ssh/id_rsa.pub extra/etc/ssh/authorized_keys
+mkdir extra/.ssh
+cp ~/.ssh/id_rsa.pub extra/.ssh/authorized_keys
 # generate the installer's host keys in advance, so that we know what the fingerprints are.
 # note that the installer will generate new ones for the final system.
+mkdir -p extra/etc/ssh 
 for type in rsa dsa ecdsa; do
     ssh-keygen -q -t $type -f extra/etc/ssh/ssh_host_${type}_key -N ''
     ssh-keygen -l -f extra/etc/ssh/ssh_host_${type}_key
