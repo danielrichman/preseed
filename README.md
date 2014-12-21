@@ -7,7 +7,7 @@ This repository used to contain bash scripts that helped create installer CDs wi
 You will need
 
 ```bash
-sudo apt-get install debian-installer-7.0-netboot-amd64 xorriso syslinux fakeroot
+sudo apt-get install debian-installer-7.0-netboot-amd64 fakeroot xorriso syslinux
 ```
 
 (the last two only necessary if you want to produce CDs).
