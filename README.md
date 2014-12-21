@@ -65,7 +65,7 @@ gzip installer/initrd
 
 ## 5) Make a CD
 
-At this point, if you can direct boot, then `linux` and `initrd.gz` would suffice. Otherwise:
+At this point, if you can direct boot, then `linux` and `initrd.gz` will suffice. Otherwise:
 
 ```bash
 cp /usr/lib/syslinux/{isohdpfx.bin,isolinux.bin} installer/
