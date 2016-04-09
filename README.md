@@ -7,7 +7,7 @@ This repository used to contain bash scripts that helped create installer CDs wi
 You will need
 
 ```bash
-sudo apt-get install debian-installer-7.0-netboot-amd64 fakeroot xorriso syslinux
+sudo apt-get install debian-installer-8-netboot-amd64 fakeroot xorriso isolinux
 ```
 
 (the last two only necessary if you want to produce CDs).
@@ -16,7 +16,7 @@ sudo apt-get install debian-installer-7.0-netboot-amd64 fakeroot xorriso syslinu
 
 ```bash
 mkdir installer
-cp /usr/lib/debian-installer/images/7.0/amd64/text/debian-installer/amd64/{linux,initrd.gz} installer/
+cp /usr/lib/debian-installer/images/8/amd64/text/debian-installer/amd64/{linux,initrd.gz} installer/
 ```
 
 ## 3) Customise
@@ -68,7 +68,7 @@ gzip installer/initrd
 At this point, if you can direct boot, then `linux` and `initrd.gz` will suffice. Otherwise:
 
 ```bash
-cp /usr/lib/syslinux/{isohdpfx.bin,isolinux.bin} installer/
+cp /usr/lib/ISOLINUX/{isohdpfx.bin,isolinux.bin} installer/
 ```
 
 Copy `isolinux.cfg` from this repository to `installer/isolinux.cfg`. Note the comment that enables the serial console, if you intend to install via OOB management / a VM / etc.
