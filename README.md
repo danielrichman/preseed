@@ -52,7 +52,9 @@ Note: I find it a bit weird that when you log into the network console it
 starts a *new* instance of the installer menu rather than just attaching you to
 the existing one on the terminal. So you may prefer to, instead of logging in
 as the `installer` user (whose shell is /bin/network-console), log in as `root`
-and use `screen -aAx`.
+and use `screen -aAx`.  In particular, this means that if your SSH drops,
+you're not hosed/split brain.
+
 
 If your network card requires binary blobs:
 
